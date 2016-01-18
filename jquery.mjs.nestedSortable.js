@@ -764,8 +764,11 @@
 				var right = _left + 1,
 					id,
 					pid,
-					parentItem;
-
+					parentItem,
+					name;
+					
+				 name = $(item).data("name");
+				
 				if ($(item).children(o.listType).children(o.items).length > 0) {
 					depth++;
 					$(item).children(o.listType).children(o.items).each(function() {
@@ -788,15 +791,15 @@
 				
 		                id = ($(id).size() > 0) ? id[2] : null;
 				
-				var name = $(item).data("name");
+				
 				
 						ret.push({
-							"id": id[2],
+							"id": id,
 							"parent_id": pid,
 							"depth": depth,
 							"left": _left,
 							"right": right,
-							"name":name
+							"name": name
 						});
 			
 
