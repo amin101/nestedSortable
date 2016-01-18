@@ -778,7 +778,8 @@
 				}
 
 				id = ($(item).attr(o.attribute || "id")).match(o.expression || (/(.+)[-=_](.+)/));
-
+				id = ($(id).size() > 0) ? id[2] : null;
+				 
 				if (depth === sDepth) {
 					pid = o.rootID;
 				} else {
@@ -789,7 +790,7 @@
 					pid = parentItem[2];
 				}
 				
-		                id = ($(id).size() > 0) ? id[2] : null;
+		               
 				
 				
 				
