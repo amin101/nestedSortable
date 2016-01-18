@@ -785,9 +785,11 @@
 											.match(o.expression || (/(.+)[-=_](.+)/));
 					pid = parentItem[2];
 				}
-
-				if (id) {
-					        var name = $(item).data("name");
+				
+		                id = ($(id).size() > 0) ? id[2] : null;
+				
+				var name = $(item).data("name");
+				
 						ret.push({
 							"id": id[2],
 							"parent_id": pid,
@@ -796,7 +798,7 @@
 							"right": right,
 							"name":name
 						});
-				}
+			
 
 				_left = right + 1;
 				return _left;
