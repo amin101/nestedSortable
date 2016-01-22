@@ -12,7 +12,6 @@
  */
 (function( factory ) {
 	"use strict";
-
 	var define = window.define;
 
 	if ( typeof define === "function" && define.amd ) {
@@ -706,34 +705,29 @@
 			return ret;
 
 			function _recursiveItems(item) {
-				var id = ($(item).attr(o.attribute || "id") || "").match(o.expression || (/(.+)[-=_](.+)/)),
+				var id = ($(item).attr(o.attribute || "id") || ""),
 					currentItem;
 
 				var data = $(item).data();
 				if (data.nestedSortableItem) {
 					delete data.nestedSortableItem; // Remove the nestedSortableItem object from the data
-				}
+                }
 
-				if (id) {
-					currentItem = {
-						"id": id[2]
-					};
-
-					currentItem = $.extend({}, currentItem, data); // Combine the two objects
-
-					if ($(item).children(o.listType).children(o.items).length > 0) {
-						currentItem.children = [];
-						$(item).children(o.listType).children(o.items).each(function() {
-							var level = _recursiveItems(this);
-							currentItem.children.push(level);
-						});
-					}
-					return currentItem;
-				}
-			}
-		},
-
-		toArray: function(options) {
+                currentItem = {
+                    "id": id
+                };
+                currentItem = $.extend({}, currentItem, data); // Combine the two objects
+                if ($(item).children(o.listType).children(o.items).length > 0) {
+                    currentItem.children = [];
+                    $(item).children(o.listType).children(o.items).each(function () {
+                        var level = _recursiveItems(this);
+                        currentItem.children.push(level);
+                    });
+                }
+                return currentItem;
+            }
+        },
+        toArray: function(options) {
 
 			var o = $.extend({}, this.options, options),
 				sDepth = o.startDepthCount || 0,
@@ -742,8 +736,8 @@
 
 			if (!o.excludeRoot) {
 				ret.push({
-					"item_id": o.rootID,
-					"parent_id": null,
+					"id": o.rootID,
+					"parent_id": "",
 					"depth": sDepth,
 					"left": left,
 					"right": ($(o.items, this.element).length + 1) * 2
@@ -752,23 +746,24 @@
 			}
 
 			$(this.element).children(o.items).each(function() {
-				left = _recursiveArray(this, sDepth, left);
+				left = _recursiveArray(this, sDepth , left);
+
 			});
 
 			ret = ret.sort(function(a, b) { return (a.left - b.left); });
-
 			return ret;
 
 			function _recursiveArray(item, depth, _left) {
 
 				var right = _left + 1,
+                    data = $(item).data(),
 					id,
-					pid,
-					parentItem,
-					name;
-					
-				 name = $(item).data("name");
-				
+					pid;
+
+                if (data.nestedSortableItem) {
+                    delete data.nestedSortableItem; // Remove the nestedSortableItem object from the data
+                }
+
 				if ($(item).children(o.listType).children(o.items).length > 0) {
 					depth++;
 					$(item).children(o.listType).children(o.items).each(function() {
@@ -777,37 +772,27 @@
 					depth--;
 				}
 
-				id = ($(item).attr(o.attribute || "id")).match(o.expression || (/(.+)[-=_](.+)/));
-				id = ($(id).size() > 0) ? id[2] : null;
-				 
-				if (depth === sDepth) {
+
+                id =  ($(item).attr(o.attribute || "id") || "");
+
+				if (depth === sDepth ) {
 					pid = o.rootID;
 				} else {
-					parentItem = ($(item).parent(o.listType)
+					pid = ($(item).parent(o.listType)
 											.parent(o.items)
-											.attr(o.attribute || "id"))
-											.match(o.expression || (/(.+)[-=_](.+)/));
-					pid = parentItem[2];
+											.attr(o.attribute || "id") || "");
 				}
-				
-		               
-				
-				
-				
-						ret.push({
+						ret.push($.extend({},{
 							"id": id,
 							"parent_id": pid,
 							"depth": depth,
 							"left": _left,
-							"right": right,
-							"name": name
-						});
-			
+							"right": right
+						},data));
 
 				_left = right + 1;
 				return _left;
 			}
-
 		},
 
 		_clearEmpty: function (item) {
