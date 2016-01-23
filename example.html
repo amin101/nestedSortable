@@ -215,7 +215,7 @@
 				$(this).toggleClass('ui-icon-triangle-1-n').toggleClass('ui-icon-triangle-1-s');
 			});
 			
-			$('.deleteMenu').click(function(){
+			$('.sortable').on('click','.deleteMenu',function(){
 				var id = $(this).attr('data-id');
 				$('#menuItem_'+id).remove();
 			});
